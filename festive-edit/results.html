@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Festive Edit — Choices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy:#1B3466; --navy-dk:#16294F; --navy-bg:#E7ECF5;
+    --blush:#C26F6C; --blush-bg:#F8ECEA;
+    --cream:#FAF9F5; --card:#FFFFFF;
+    --line:#E6D9D3; --line2:#D6C7C0;
+    --ink:#23263A; --ink2:#555A6C; --ink3:#8A8FA3;
+    --ok:#1F7A5C; --ok-bg:#E3F3EC;
+    --r:12px; --rs:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Jost',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:36px 24px 72px}
+
+  .masthead{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    background:var(--navy);color:#fff;border-radius:var(--r);padding:22px 26px;margin-bottom:24px}
+  .mh-eyebrow{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
+  .mh-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:500;line-height:1.15;margin-top:3px}
+  .mh-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+  .btn{font-family:inherit;font-size:13px;font-weight:500;border-radius:var(--rs);cursor:pointer;
+    padding:9px 15px;display:inline-flex;align-items:center;gap:7px;border:1px solid transparent;transition:.13s}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+  .btn-ghost:hover{background:rgba(255,255,255,.2)}
+  .btn-solid{background:var(--navy);color:#fff}
+  .btn-solid:hover{background:var(--navy-dk)}
+  .btn-line{background:#fff;color:var(--ink);border-color:var(--line2)}
+  .btn-line:hover{border-color:var(--navy);color:var(--navy)}
+  .btn svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none}
+
+  /* lock */
+  .lock{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:52px 36px;text-align:center;max-width:430px;margin:40px auto}
+  .lock-ic{width:54px;height:54px;border-radius:50%;background:var(--navy-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+  .lock-ic svg{width:24px;height:24px;stroke:var(--navy);stroke-width:1.7;fill:none;stroke-linecap:round}
+  .lock h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:23px;font-weight:500;margin-bottom:6px}
+  .lock p{font-size:13.5px;color:var(--ink2);margin-bottom:22px}
+  .lock-row{display:flex;gap:8px}
+  .lock-row input{flex:1;height:42px;padding:0 14px;border:1px solid var(--line2);border-radius:var(--rs);
+    font-family:inherit;font-size:14px;background:#fff;color:var(--ink)}
+  .lock-row input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,52,102,.13)}
+  .lock-err{display:none;margin-top:12px;font-size:12.5px;color:var(--blush)}
+  .lock-err.on{display:block}
+
+  .main{display:none}
+  .main.on{display:block}
+
+  /* gift tally cards */
+  .tally{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-bottom:14px}
+  .tcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden}
+  .tcard::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--navy)}
+  .tcard .gname{font-size:12.5px;color:var(--ink2);line-height:1.35;min-height:34px;padding-left:4px}
+  .tcard .gnum{font-family:'Cormorant Garamond',Georgia,serif;font-size:38px;font-weight:600;color:var(--navy);line-height:1;margin-top:8px;padding-left:4px}
+  .tcard .gpct{font-size:11.5px;color:var(--ink3);margin-top:3px;padding-left:4px}
+  .bar{height:4px;background:var(--navy-bg);border-radius:3px;margin-top:11px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--blush);border-radius:3px}
+
+  .strip{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:12.5px;color:var(--ink2)}
+  .chip b{color:var(--navy);font-weight:600}
+
+  /* toolbar */
+  .bar2{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .bar2 h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:500}
+  .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .search{width:240px;height:36px;padding:0 13px;border:1px solid var(--line2);border-radius:var(--rs);
+    font-family:inherit;font-size:13px;background:#fff}
+  .search:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,52,102,.13)}
+  select.filter{height:36px;padding:0 30px 0 12px;border:1px solid var(--line2);border-radius:var(--rs);
+    font-family:inherit;font-size:13px;background:#fff;cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8FA3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 11px center}
+
+  /* table */
+  .tablewrap{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:auto}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{background:var(--cream);text-align:left;padding:11px 14px;font-weight:500;font-size:11px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);border-bottom:1px solid var(--line);
+    white-space:nowrap;cursor:pointer;user-select:none}
+  th:hover{color:var(--navy)}
+  td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#FDFCFA}
+  .nm{font-weight:500}
+  .sub{font-size:11.5px;color:var(--ink3)}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:500;
+    background:var(--navy-bg);color:var(--navy-dk);white-space:nowrap}
+  .pill.lu{background:var(--navy-bg);color:var(--navy-dk)}
+  .pill.ac{background:var(--blush-bg);color:var(--blush)}
+  .pill.ot{background:#EFEFEF;color:#6B6B6B}
+  .mono{font-variant-numeric:tabular-nums}
+  .empty{text-align:center;padding:48px 20px;color:var(--ink3);font-size:13.5px}
+  .foot{margin-top:14px;font-size:11.5px;color:var(--ink3);text-align:right}
+
+  @media print{
+    body{background:#fff}
+    .masthead .mh-right,.tools,.bar2 .tools{display:none!important}
+    .tablewrap{border:none}
+    th{background:#f4f4f4!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <div class="mh-eyebrow">The Festive Edit</div>
+      <div class="mh-title">Gift choices</div>
+    </div>
+    <div class="mh-right" id="mh-actions" style="display:none">
+      <button class="btn btn-ghost" id="refresh"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>Refresh</button>
+      <button class="btn btn-ghost" id="csv"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5l5 5 5-5M5 21h14"/></svg>Export CSV</button>
+      <button class="btn btn-ghost" id="print"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>Print</button>
+      <button class="btn btn-ghost" id="lockbtn"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Lock</button>
+    </div>
+  </div>
+
+  <div class="lock" id="lock">
+    <div class="lock-ic"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+    <h2>Password required</h2>
+    <p>This page lists employee contact details. HR use only.</p>
+    <form class="lock-row" id="lockform">
+      <input type="password" id="pw" placeholder="Enter password" autocomplete="current-password" />
+      <button class="btn btn-solid" type="submit" id="unlock">Unlock</button>
+    </form>
+    <div class="lock-err" id="lockerr">Wrong password. Try again.</div>
+  </div>
+
+  <div class="main" id="main">
+    <div class="tally" id="tally"></div>
+    <div class="strip" id="strip"></div>
+
+    <div class="bar2">
+      <h3>All responses</h3>
+      <div class="tools">
+        <input class="search" id="q" type="text" placeholder="Search name, email, phone…" />
+        <select class="filter" id="fgift"><option value="">All gifts</option></select>
+        <select class="filter" id="fco"><option value="">All companies</option></select>
+      </div>
+    </div>
+
+    <div class="tablewrap" id="list"></div>
+    <div class="foot" id="foot"></div>
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  // Paste the SAME Apps Script /exec URL used by the gift page.
+  // ============================================================
+  const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbw0_j4qp4gpcjNa6L_bGFjVA1IZOmMa07Htd0hMw_LSyL8I40wycuGzxmKk3CJjfhBg/exec';
+
+  let DATA = [], COUNTS = {}, GIFTS = {}, STOCK = {}, PW = '';
+  let sortCol = 'timestamp', sortDir = 'desc';
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  const coCls = c => c==='Luckmans'?'lu':c==='Accubooks'?'ac':'ot';
+
+  $('lockform').addEventListener('submit', e => { e.preventDefault(); unlock(); });
+  $('lockbtn').addEventListener('click', () => {
+    PW=''; DATA=[]; $('main').classList.remove('on');
+    $('mh-actions').style.display='none'; $('lock').style.display='block'; $('pw').value='';
+  });
+  $('refresh').addEventListener('click', () => load(true));
+  $('q').addEventListener('input', render);
+  $('fgift').addEventListener('change', render);
+  $('fco').addEventListener('change', render);
+  $('print').addEventListener('click', () => window.print());
+  $('csv').addEventListener('click', exportCsv);
+
+  async function unlock() {
+    const pw = $('pw').value;
+    if (!pw) return;
+    const b = $('unlock'); b.disabled = true; b.textContent = 'Checking…';
+    $('lockerr').classList.remove('on');
+    try {
+      const r = await fetchList(pw);
+      if (!r.success) {
+        $('lockerr').textContent = r.error === 'bad_password'
+          ? 'Wrong password. Try again.' : ('Error: ' + (r.error || 'unknown'));
+        $('lockerr').classList.add('on');
+        return;
+      }
+      PW = pw;
+      absorb(r);
+      $('lock').style.display = 'none';
+      $('main').classList.add('on');
+      $('mh-actions').style.display = 'flex';
+      render();
+    } catch (err) {
+      $('lockerr').textContent = 'Could not reach the server: ' + err.message;
+      $('lockerr').classList.add('on');
+    } finally { b.disabled = false; b.textContent = 'Unlock'; }
+  }
+
+  async function fetchList(pw) {
+    if (!BACKEND_URL || BACKEND_URL.indexOf('script.google.com') === -1) {
+      throw new Error('BACKEND_URL is not set in results.html');
+    }
+    const res = await fetch(BACKEND_URL + '?action=list&pw=' + encodeURIComponent(pw));
+    const t = await res.text();
+    if (t.trim().charAt(0) === '<') throw new Error('Unexpected response — check the deployment is set to "Anyone".');
+    return JSON.parse(t);
+  }
+
+  async function load(showBusy) {
+    if (!PW) return;
+    if (showBusy) { $('refresh').disabled = true; $('refresh').textContent = 'Refreshing…'; }
+    try { absorb(await fetchList(PW)); render(); }
+    catch (e) { alert('Refresh failed: ' + e.message); }
+    finally {
+      $('refresh').disabled = false;
+      $('refresh').innerHTML = '<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>Refresh';
+    }
+  }
+
+  function absorb(r) {
+    DATA = r.choices || []; COUNTS = r.counts || {};
+    GIFTS = r.gifts || {};  STOCK = r.stock || {};
+    const g = $('fgift');
+    if (g.options.length <= 1) {
+      Object.keys(GIFTS).forEach(k => {
+        const o = document.createElement('option'); o.value = k; o.textContent = GIFTS[k]; g.appendChild(o);
+      });
+    }
+    const co = $('fco');
+    const seen = [...new Set(DATA.map(d => d.company).filter(Boolean))];
+    co.innerHTML = '<option value="">All companies</option>' +
+      seen.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  }
+
+  function filtered() {
+    const q = $('q').value.trim().toLowerCase();
+    const fg = $('fgift').value, fc = $('fco').value;
+    return DATA.filter(d => {
+      if (fg && d.giftSlot !== fg) return false;
+      if (fc && d.company !== fc) return false;
+      if (!q) return true;
+      return [d.name,d.email,d.phone,d.gift,d.company].join(' ').toLowerCase().includes(q);
+    });
+  }
+
+  function render() {
+    // ---- tally cards ----
+    const total = DATA.length || 0;
+    $('tally').innerHTML = Object.keys(GIFTS).map(k => {
+      const n = COUNTS[k] || 0;
+      const pct = total ? Math.round(n/total*100) : 0;
+      const cap = Number(STOCK[k]) || 0;
+      return `<div class="tcard">
+        <div class="gname">${esc(GIFTS[k])}</div>
+        <div class="gnum">${n}${cap?`<span style="font-size:17px;color:var(--ink3)"> / ${cap}</span>`:''}</div>
+        <div class="gpct">${pct}% of responses</div>
+        <div class="bar"><i style="width:${pct}%"></i></div>
+      </div>`;
+    }).join('');
+
+    // ---- summary chips ----
+    const byCo = {};
+    DATA.forEach(d => { byCo[d.company||'Other'] = (byCo[d.company||'Other']||0)+1; });
+    $('strip').innerHTML =
+      `<div class="chip">Total responses <b>${total}</b></div>` +
+      Object.keys(byCo).sort().map(c => `<div class="chip">${esc(c)} <b>${byCo[c]}</b></div>`).join('');
+
+    // ---- table ----
+    const rows = filtered().slice().sort((a,b) => {
+      const av=String(a[sortCol]||''), bv=String(b[sortCol]||'');
+      return sortDir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+    const arrow = c => sortCol===c ? (sortDir==='asc'?' ↑':' ↓') : '';
+    if (!rows.length) {
+      $('list').innerHTML = `<div class="empty">${DATA.length?'No matches for that filter.':'No choices submitted yet.'}</div>`;
+      $('foot').textContent = '';
+      return;
+    }
+    $('list').innerHTML = `<table><thead><tr>
+        <th data-s="name">Employee${arrow('name')}</th>
+        <th data-s="phone">Phone${arrow('phone')}</th>
+        <th data-s="gift">Gift chosen${arrow('gift')}</th>
+        <th data-s="company">Company${arrow('company')}</th>
+        <th data-s="timestamp">Chosen at${arrow('timestamp')}</th>
+      </tr></thead><tbody>` +
+      rows.map(d => `<tr>
+        <td><div class="nm">${esc(d.name)}</div><div class="sub">${esc(d.email)}</div></td>
+        <td class="mono">${esc(d.phone)}</td>
+        <td>${esc(d.gift)}</td>
+        <td><span class="pill ${coCls(d.company)}">${esc(d.company||'Other')}</span></td>
+        <td class="sub mono">${esc(d.timestamp)}</td>
+      </tr>`).join('') + '</tbody></table>';
+
+    $('list').querySelectorAll('th[data-s]').forEach(th => {
+      th.addEventListener('click', () => {
+        const c = th.dataset.s;
+        if (sortCol===c) sortDir = sortDir==='asc'?'desc':'asc'; else { sortCol=c; sortDir='asc'; }
+        render();
+      });
+    });
+    $('foot').textContent = `Showing ${rows.length} of ${DATA.length}`;
+  }
+
+  function exportCsv() {
+    const rows = filtered();
+    if (!rows.length) { alert('Nothing to export.'); return; }
+    const head = ['Name','Email','Phone','Gift','Company','Chosen at'];
+    const csv = [head].concat(rows.map(d => [d.name,d.email,d.phone,d.gift,d.company,d.timestamp]))
+      .map(r => r.map(v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"').join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+    a.download = 'festive-edit-choices.csv';
+    a.click();
+  }
+</script>
+</body>
+</html>
